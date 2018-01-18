@@ -1,24 +1,4 @@
 #[macro_export]
-macro_rules! register_single_bits {
-    {
-        $valtype:ty, $reg_desc:ident, $field:ident, $bit:expr, 1
-    } => {
-        #[allow(non_upper_case_globals)]
-        #[allow(unused)]
-        pub const SET: FieldValue<$valtype, $reg_desc> =
-            FieldValue::<$valtype, $reg_desc>::new(1, $bit, 1);
-
-        #[allow(non_upper_case_globals)]
-        #[allow(unused)]
-        pub const CLEAR: FieldValue<$valtype, $reg_desc> =
-            FieldValue::<$valtype, $reg_desc>::new(1, $bit, 0);
-    };
-    {
-        $valtype:ty, $reg_desc:ident, $field:ident, $bit:expr, $numbits:expr
-    } => { };
-}
-
-#[macro_export]
 macro_rules! register_bitmasks {
     {
         // BITFIELD_NAME OFFSET(x)
@@ -79,7 +59,15 @@ macro_rules! register_bitmasks {
                 FieldValue::<$valtype, $reg_desc>::new((1<<$numbits)-1, $offset, $value);
             )*
 
-            register_single_bits!($valtype, $reg_desc, $field, $offset, $numbits);
+            #[allow(non_upper_case_globals)]
+            #[allow(unused)]
+            pub const SET: FieldValue<$valtype, $reg_desc> =
+                FieldValue::<$valtype, $reg_desc>::new((1<<$numbits)-1, $offset, (1<<$numbits)-1);
+
+            #[allow(non_upper_case_globals)]
+            #[allow(unused)]
+            pub const CLEAR: FieldValue<$valtype, $reg_desc> =
+                FieldValue::<$valtype, $reg_desc>::new((1<<$numbits)-1, $offset, 0);
 
             #[allow(dead_code)]
             #[allow(non_camel_case_types)]
