@@ -18,7 +18,6 @@ macro_rules! register_single_bits {
     } => { };
 }
 
-
 #[macro_export]
 macro_rules! register_bitmasks {
     {
